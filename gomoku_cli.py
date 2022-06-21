@@ -81,6 +81,40 @@ def winner(board):
                     return id
     return EMPTY
 
+def terminal(board):
+    """
+    Returns True if game is over, False otherwise.
+    """
+    return winner(board) != EMPTY or not (board == EMPTY).any()
+
+def display_state(board):
+    print(' '+' -'*board.shape[0])
+    
+    board_len = board.shape[0]
+    print('  ' + ' '.join([chr(ord('A') + i) for i in range(board_len)]))
+
+    for row in range(board_len):
+        print(chr(ord('A') + row), end=' ')
+        for col in range(board_len):
+            ch = board[row, col]
+            if ch == EMPTY: 
+                print('.', end=' ')
+            elif ch == X:
+                print( 'X', end=' ')
+            elif ch == O:
+                print( 'O', end=' ')
+        print()
+
+    if terminal(board):
+        victor = winner(board)
+        if victor != EMPTY:
+            print('player {} wins.'.format('O' if victor == X else 'X'))
+        else:
+            print('draw')
+    else:
+        turn = 'X' if player_turn(board) == X else 'O'
+        print('Player {}\'s turn'.format(turn))
+
 #----------------------------------------------------------------------
 # main game
 #----------------------------------------------------------------------

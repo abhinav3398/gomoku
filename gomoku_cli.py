@@ -47,6 +47,40 @@ def result(board, action, player=None):
         player = player_turn(board)
     return make_move(board.copy(), action, player)
 
+def get(board, action):
+    """
+    Returns the value of board at action.
+    """
+    board_len = board.shape[0]
+    row, col = action
+    
+    if row < 0 or row >= board_len or col < 0 or col >= board_len: return 0
+    return board[row, col]
+
+def winner(board):
+    """
+    Returns the winner of the game, if there is one.
+    """
+    dirs = ((1, -1), (1, 0), (1, 1), (0, 1))
+    board_len = board.shape[0]
+    
+    for i in range(board_len):
+        for j in range(board_len):
+            if board[i, j] == EMPTY: continue
+            id = board[i, j]
+            for d in dirs:
+                x, y = i, j
+                count = 0
+                for _ in range(5):
+                    if get(board, (i, j)) != id: break
+                    y += d[0]
+                    x += d[1]
+                    count += 1
+                # Exactly 5 in a row and no more than 5
+                if count == 5 and get(board, (i, j)) != id:
+                    return id
+    return EMPTY
+
 #----------------------------------------------------------------------
 # main game
 #----------------------------------------------------------------------

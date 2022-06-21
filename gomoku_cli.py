@@ -122,6 +122,49 @@ def gamemain():
     board_size = 15
     board = initial_state(board_size)
 
+    while 1:
+        row = col = -1
+        display_state(board)
+        turn = player_turn(board)
+        turn_chr = 'X' if turn == X else 'O'
+        action = input('Enter your move (q/f:Quit/Forfeit): ').strip('\r\n\t ').lower()
+        
+        if action == 'f':
+            print('player {} forfeits.'.format(turn_chr))
+            print('player {} wins.'.format('O' if turn == X else 'X'))
+            
+            print("new game")
+            board = initial_state(board_size)
+            continue
+        elif action == 'q':
+            print('player {} quits.'.format(turn_chr))
+            break
+
+        elif len(action) == 2:
+            tr = ord(action[0].upper()) - ord('A')
+            tc = ord(action[1].upper()) - ord('A')
+            if tr >= 0 and tc >= 0 and tr < board_size and tc < board_size:
+                if board[tr, tc] == 0:
+                    row, col = tr, tc
+                else:
+                    print( 'can not move there')
+            else:
+                print( 'bad position')
+
+        if row >= 0 and col >= 0:
+            action = (row, col)
+            board = make_move(board, action, turn)
+            if terminal(board):
+                victor = winner(board)
+                if victor != EMPTY:
+                    print('player {} wins.'.format('O' if victor == X else 'X'))
+                else:
+                    print('draw')
+                
+                print("new game")
+                board = initial_state(board_size)
+                continue
+
 #----------------------------------------------------------------------
 if __name__ == '__main__':
     gamemain()

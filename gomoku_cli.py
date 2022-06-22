@@ -145,6 +145,7 @@ def display_state(board):
         turn = 'X' if player_turn(board) == X else 'O'
         print('Player {}\'s turn'.format(turn))
 
+# todo: make minimax converg faster
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.

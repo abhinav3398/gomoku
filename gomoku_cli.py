@@ -2,6 +2,7 @@
 Gomoku Player
 """
 import numpy as np
+from random import shuffle
 
 X = 1 # White Player
 O = -1 # Black Player
@@ -114,6 +115,57 @@ def display_state(board):
     else:
         turn = 'X' if player_turn(board) == X else 'O'
         print('Player {}\'s turn'.format(turn))
+
+def minimax(board):
+    """
+    Returns the optimal action for the current player on the board.
+    """
+    if terminal(board):
+        return None
+    # find which pllayer's turn it is in the board
+    turn = player_turn(board) == X
+    # find the playable moves init dict to map value to optimised moves
+    moves, v2action = actions(board), {}
+    # shuffle for randomness
+    shuffle(moves)
+
+    minimum_score, maximum_score = -(board.shape[0]**2), board.shape[0]**2
+    
+    def alphabeta(b, alpha, beta, maximizingPlayer):
+        """ min_/max_value function with alpha-beta pruning"""
+
+        if terminal(b):
+            return winner()(b)
+
+        else:
+            score, optimizer = (minimum_score, max) if maximizingPlayer else (maximum_score, min)
+
+            possible_moves = actions(b)
+
+            for move in possible_moves:
+                child = result(board=b, action=move)
+
+                score = optimizer(score, alphabeta(b=child, alpha=alpha, beta=beta, maximizingPlayer=not maximizingPlayer))
+
+                if maximizingPlayer:
+                    alpha = optimizer(alpha, score)
+                else:
+                    beta = optimizer(beta, score)
+
+                if alpha >= beta:
+                    break
+
+            return score
+    
+    # picks action a in ACTIONS(s) that produces optimal value of MIN/MAX-VALUE(RESULT(s, a))
+    for move in moves:
+        possible_board = result(board=board, action=move)
+        v2action[alphabeta(b=possible_board, maximizingPlayer=not turn, alpha=minimum_score, beta=maximum_score)] = move
+    # choose our optimizer function (min or max) based on which player is playing
+    optimizer = max if turn else min
+    # return the optimised action from dict.
+    return v2action[optimizer(v2action)]
+
 
 #----------------------------------------------------------------------
 # main game

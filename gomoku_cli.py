@@ -72,12 +72,12 @@ def winner(board):
                 x, y = i, j
                 count = 0
                 for _ in range(5):
-                    if get(board, (i, j)) != id: break
+                    if get(board, (x, y)) != id: break
                     y += d[0]
                     x += d[1]
                     count += 1
                 # Exactly 5 in a row and no more than 5
-                if count == 5 and get(board, (i, j)) != id:
+                if count == 5 and get(board, (x+d[0], y+d[1])) != id:
                     return id
     return EMPTY
 
@@ -154,16 +154,17 @@ def gamemain():
         if row >= 0 and col >= 0:
             action = (row, col)
             board = make_move(board, action, turn)
-            if terminal(board):
-                victor = winner(board)
-                if victor != EMPTY:
-                    print('player {} wins.'.format('O' if victor == X else 'X'))
-                else:
-                    print('draw')
-                
-                print("new game")
-                board = initial_state(board_size)
-                continue
+        
+        if terminal(board):
+            victor = winner(board)
+            if victor != EMPTY:
+                print('player {} wins.'.format('O' if victor == X else 'X'))
+            else:
+                print('draw')
+            
+            print("new game")
+            board = initial_state(board_size)
+            continue
 
 #----------------------------------------------------------------------
 if __name__ == '__main__':

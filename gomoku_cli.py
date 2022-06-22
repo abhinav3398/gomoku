@@ -1,7 +1,8 @@
 """
 Gomoku Player
 """
-import numpy as np
+# import numpy as np
+import math
 from random import shuffle
 
 X = 1 # White Player
@@ -12,7 +13,8 @@ def initial_state(size=15):
     """
     Returns starting state of the board.
     """
-    return np.array([[EMPTY]*size]*size)
+    # return np.array([[EMPTY]*size]*size)
+    return [[EMPTY for _ in range(size)] for _ in range(size)]
 
 
 def player_turn(board, last_player=None):
@@ -22,13 +24,28 @@ def player_turn(board, last_player=None):
     if last_player == X or last_player == O:
         return X if last_player == O else O
     
-    return (O if np.sign(np.sum(board)) == X else X) if (board==EMPTY).any() else EMPTY
+    # return (O if np.sign(np.sum(board)) == X else X) if (board==EMPTY).any() else EMPTY
+
+    _sum = 0 # sum of all elements in the board
+    for row in board:
+        _sum += sum(row)
+    _sum_sign = int(math.copysign(1, _sum))
+
+    any_empty = False
+    for row in board:
+        if EMPTY in row:
+            any_empty = True
+            break
+    
+    return (O if _sum_sign == X else X) if any_empty else EMPTY
 
 def actions(board):
     """
     Returns set of all possible actions (i, j) on the board.
     """
-    return list(zip(*np.where(board == EMPTY)))
+    # return list(zip(*np.where(board == EMPTY)))
+    board_len = len(board[0])
+    return [(i, j) for i in range(board_len) for j in range(board_len) if board[i][j] == EMPTY]
 
 def make_move(board, action, player=None):
     """
@@ -37,7 +54,8 @@ def make_move(board, action, player=None):
     if player is None:
         player = player_turn(board)
     i, j = action
-    board[i, j] = player
+    # board[i, j] = player
+    board[i][j] = player
     return board
 
 def result(board, action, player=None):
@@ -52,23 +70,26 @@ def get(board, action):
     """
     Returns the value of board at action.
     """
-    board_len = board.shape[0]
+    # board_len = board.shape[0]
+    board_len = len(board[0])
     row, col = action
     
     if row < 0 or row >= board_len or col < 0 or col >= board_len: return 0
-    return board[row, col]
+    # return board[row, col]
+    return board[row][col]
 
 def winner(board):
     """
     Returns the winner of the game, if there is one.
     """
     dirs = ((1, -1), (1, 0), (1, 1), (0, 1))
-    board_len = board.shape[0]
+    # board_len = board.shape[0]
+    board_len = len(board[0])
     
     for i in range(board_len):
         for j in range(board_len):
-            if board[i, j] == EMPTY: continue
-            id = board[i, j]
+            if board[i][j] == EMPTY: continue
+            id = board[i][j]
             for d in dirs:
                 x, y = i, j
                 count = 0
@@ -86,18 +107,26 @@ def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
-    return winner(board) != EMPTY or not (board == EMPTY).any()
+    # return winner(board) != EMPTY or not (board == EMPTY).any()
+    any_empty = False
+    for row in board:
+        if EMPTY in row:
+            any_empty = True
+            break
+
+    return winner(board) != EMPTY or not any_empty
 
 def display_state(board):
-    print(' '+' -'*board.shape[0])
+    board_len = len(board[0])
     
-    board_len = board.shape[0]
+    print(' '+' -'*board_len)
+    
     print('  ' + ' '.join([chr(ord('A') + i) for i in range(board_len)]))
 
     for row in range(board_len):
         print(chr(ord('A') + row), end=' ')
         for col in range(board_len):
-            ch = board[row, col]
+            ch = board[row][col]
             if ch == EMPTY: 
                 print('.', end=' ')
             elif ch == X:
@@ -197,7 +226,7 @@ def gamemain():
             tr = ord(action[0].upper()) - ord('A')
             tc = ord(action[1].upper()) - ord('A')
             if tr >= 0 and tc >= 0 and tr < board_size and tc < board_size:
-                if board[tr, tc] == 0:
+                if board[tr][tc] == 0:
                     row, col = tr, tc
                 else:
                     print( 'can not move there')

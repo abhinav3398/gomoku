@@ -188,6 +188,7 @@ def gamemain():
             print("new game")
             board = initial_state(board_size)
             continue
+        
         elif action == 'q':
             print('player {} quits.'.format(turn_chr))
             break
@@ -202,6 +203,13 @@ def gamemain():
                     print( 'can not move there')
             else:
                 print( 'bad position')
+        
+        elif action == 'h' or action == 'help':
+            action = minimax(board)
+            if action is not None:
+                print('play: {}'.format(action))
+            else:
+                print('no moves left to play.')
 
         if row >= 0 and col >= 0:
             action = (row, col)

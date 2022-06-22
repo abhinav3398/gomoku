@@ -4,6 +4,7 @@ Gomoku Player
 # import numpy as np
 import math
 from random import shuffle
+from copy import deepcopy
 
 X = 1 # White Player
 O = -1 # Black Player
@@ -64,7 +65,7 @@ def result(board, action, player=None):
     """
     if player is None:
         player = player_turn(board)
-    return make_move(board.copy(), action, player)
+    return make_move(deepcopy(board), action, player)
 
 def get(board, action):
     """
@@ -150,6 +151,7 @@ def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
+    board_len = len(board[0])
     if terminal(board):
         return None
     # find which pllayer's turn it is in the board
@@ -159,13 +161,13 @@ def minimax(board):
     # shuffle for randomness
     shuffle(moves)
 
-    minimum_score, maximum_score = -(board.shape[0]**2), board.shape[0]**2
+    minimum_score, maximum_score = -(board_len**2), board_len**2
     
     def alphabeta(b, alpha, beta, maximizingPlayer):
         """ min_/max_value function with alpha-beta pruning"""
 
         if terminal(b):
-            return winner()(b)
+            return winner(b)
 
         else:
             score, optimizer = (minimum_score, max) if maximizingPlayer else (maximum_score, min)
@@ -237,7 +239,9 @@ def gamemain():
         elif action == 'h' or action == 'help':
             action = minimax(board)
             if action is not None:
-                print('play: {}'.format(action))
+                x, y = action
+                x, y = chr(ord('A') + x), chr(ord('A') + y)
+                print('play: {}'.format((x, y)))
             else:
                 print('no moves left to play.')
 

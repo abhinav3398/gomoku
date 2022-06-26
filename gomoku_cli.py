@@ -146,7 +146,22 @@ def display_state(board):
         turn = 'X' if player_turn(board) == X else 'O'
         print('Player {}\'s turn'.format(turn))
 
-# todo: make minimax converg faster
+
+def ai_move(board):
+    """
+    # TODO
+    makes minimax converge faster by:
+    1: make a 6 x 6 filter kernel and apply that filter to game board and perform these filter operations,
+    2: rotate the filter(by 90°) 4 times and store those 4 filter configurations.
+    3: convolve through the board parallelly(not sequentially) using all 4 filters.
+    4: if any of the 4 filter matches the board subset during convolution, then
+    5: apply minimax to find winning move(location) on the filtered subset of the board
+    6: rotate the move/location according to filter configuration."
+    7: calculate and assign (TODO: some kind of score) to the move to find the optimal(max/min) scoring move from the (board_size x board_size)moves obtained after entire convolvolution.
+    8: return the optimal(minimum/maximum) move
+    """
+    pass
+
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.

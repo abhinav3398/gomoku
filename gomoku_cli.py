@@ -94,13 +94,13 @@ def winner(board):
             for d in dirs:
                 x, y = i, j
                 count = 0
-                for _ in range(5):
-                    if get(board, (x, y)) != id: break
+                while get(board, (x, y)) == id:
+                    if count > 5 or get(board, (x, y)) != id: break
                     y += d[0]
                     x += d[1]
                     count += 1
                 # Exactly 5 in a row and no more than 5
-                if count == 5 and get(board, (x+d[0], y+d[1])) != id:
+                if count == 5 and get(board, (i+5*d[0], j+5*d[1])) != id and get(board, (i-d[0], j-d[1])) != id:
                     return id
     return EMPTY
 

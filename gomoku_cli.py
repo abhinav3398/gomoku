@@ -122,7 +122,7 @@ def display_state(board):
     
     print(' '+' -'*board_len)
     
-    print('  ' + ' '.join([chr(ord('A') + i) for i in range(board_len)]))
+    print('  ' + ' '.join([chr(ord('A') + i) for i in range(board_len)]), end="__\n")
 
     for row in range(board_len):
         print(chr(ord('A') + row), end=' ')
@@ -134,18 +134,20 @@ def display_state(board):
                 print( 'X', end=' ')
             elif ch == O:
                 print( 'O', end=' ')
-        print()
-
+        print('|')
     if terminal(board):
         victor = winner(board)
         if victor != EMPTY:
-            print('player {} wins.'.format('O' if victor == X else 'X'))
+            msg='|Player {} wins.'.format('O' if victor == X else 'X')
         else:
-            print('draw')
+            msg='|draw'
     else:
         turn = 'X' if player_turn(board) == X else 'O'
-        print('Player {}\'s turn'.format(turn))
-
+        msg='|Player {}\'s turn'.format(turn)
+    print(msg.ljust(31), end=' ')
+    print("|_____")
+    print("|___________________________________ |")
+    print("                                    ↓↓")
 
 def ai_move(board):
     """

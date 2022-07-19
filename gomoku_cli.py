@@ -122,7 +122,7 @@ def display_state(board):
     
     print(' '+' -'*board_len)
     
-    print('  ' + ' '.join([chr(ord('A') + i) for i in range(board_len)]))
+    print('  ' + ' '.join([chr(ord('A') + i) for i in range(board_len)]), end="__\n")
 
     for row in range(board_len):
         print(chr(ord('A') + row), end=' ')
@@ -134,18 +134,20 @@ def display_state(board):
                 print( 'X', end=' ')
             elif ch == O:
                 print( 'O', end=' ')
-        print()
-
+        print('|')
     if terminal(board):
         victor = winner(board)
         if victor != EMPTY:
-            print('player {} wins.'.format('O' if victor == X else 'X'))
+            msg='|Player {} wins.'.format('O' if victor == X else 'X')
         else:
-            print('draw')
+            msg='|draw'
     else:
         turn = 'X' if player_turn(board) == X else 'O'
-        print('Player {}\'s turn'.format(turn))
-
+        msg='|Player {}\'s turn'.format(turn)
+    print(msg.ljust(31), end=' ')
+    print("|_____")
+    print("|___________________________________ |")
+    print("                                    ↓↓")
 
 def ai_move(board):
     """
@@ -228,7 +230,7 @@ def gamemain():
         turn_chr = 'X' if turn == X else 'O'
         action = input('Enter your move (q/f:Quit/Forfeit): ').strip('\r\n\t ').lower()
         
-        if action == 'f':
+        if len(action) != 2 and action[0] == 'f':
             print('player {} forfeits.'.format(turn_chr))
             print('player {} wins.'.format('O' if turn == X else 'X'))
             
@@ -236,13 +238,13 @@ def gamemain():
             board = initial_state(board_size)
             continue
         
-        elif action == 'q':
+        elif len(action) != 2 and action[0] == 'q':
             print('player {} quits.'.format(turn_chr))
             break
 
         elif len(action) == 2:
-            tr = ord(action[0].upper()) - ord('A')
-            tc = ord(action[1].upper()) - ord('A')
+            tr = ord(action[0]) - ord('a')
+            tc = ord(action[1]) - ord('a')
             if tr >= 0 and tc >= 0 and tr < board_size and tc < board_size:
                 if board[tr][tc] == 0:
                     row, col = tr, tc

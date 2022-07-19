@@ -1,1 +1,4 @@
 .history/
+*.pyc
+*.jl
+*.toml
